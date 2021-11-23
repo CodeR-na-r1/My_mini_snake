@@ -61,7 +61,8 @@ public:
 		Point head(points.front().x, points.front().y);
 		Point point;
 
-		int trand = rand() % 4;
+		if (trand == 0 || rand() & 1)
+			trand = rand() % 4;
 
 		int count(0);
 		do
@@ -118,6 +119,7 @@ private:
 	char** screen;
 	unsigned width;
 	unsigned height;
+	int trand;
 	COORD bufferConsole;
 	HANDLE hWnd;
 
