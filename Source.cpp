@@ -1,4 +1,5 @@
 #include <iostream>
+#include <conio.h>
 #include <windows.h>
 #include "Snake.h"
 
@@ -8,7 +9,7 @@
 int main()
 {
 	srand(time(0));
-
+	
 	// setupConsole
 	HANDLE hWnd = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD bufferConsole = { WIDTH, HEIGHT };
@@ -53,16 +54,18 @@ int main()
 
 	int i = 0;
 	Point new_point;
-	while (i<100)
+	char key;
+	while (true)
 	{
-		Sleep(400);
-		new_point = snake.step();
-		if (new_point.x == 0 && new_point.y == 0)
+		key = _getch();
+		//Sleep(400);
+		new_point = snake.step(key);
+		snake.show(new_point);
+		if (snake.over)
 		{
 			cout << char(7);
 			break;
 		}
-		snake.show(new_point);
 		++i;
 	}
 	

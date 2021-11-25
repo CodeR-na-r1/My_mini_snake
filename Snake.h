@@ -63,7 +63,7 @@ public:
 		return;
 	}
 
-	Point step()
+	Point auto_step()
 	{
 		Point head(points.front().x, points.front().y);
 		Point point;
@@ -89,6 +89,23 @@ public:
 		} while (true);
 		
 		return point;
+	}
+
+	Point step(char key)
+	{
+		Point res(points.front().x, points.front().y);
+
+		if (int(key) == 119) { --res.y; }
+		else if (int(key) == 100) { ++res.x; }
+		else if (int(key) == 115) { ++res.y; }
+		else if (int(key) == 97) { --res.x; }
+
+		if (res.x < 1 || res.x >= width || res.y < 1 || res.y >= height || screen[res.y][res.x] == '*')
+		{
+			over = true;
+		}
+
+		return res;
 	}
 
 	void show()
@@ -178,6 +195,7 @@ public:
 	}
 
 	bool is_fruit;
+	bool over;
 
 private:
 	list<Point> points;
@@ -186,7 +204,6 @@ private:
 	unsigned width;
 	unsigned height;
 	int trand;
-	bool over;
 	COORD bufferConsole;
 	HANDLE hWnd;
 
