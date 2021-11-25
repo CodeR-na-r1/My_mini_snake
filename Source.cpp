@@ -1,6 +1,7 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
+#include <thread>
 #include "Snake.h"
 
 #define WIDTH 120
@@ -52,13 +53,15 @@ int main()
 	snake.init();	// initialize the snake's body
 	snake.show();	// show of field and snake
 
-	int i = 0;
 	Point new_point;
-	char key;
+	char key = 'd';
+	bool flag_key, flag_end = false;
+	thread key_in([&key, &flag_end, &flag_key]() { while (!flag_end) { key = _getch(); flag_key = true; } });
 	while (true)
 	{
-		key = _getch();
-		//Sleep(400);
+		int i = 0;
+		while (!flag_key && i < 50) { Sleep(10); ++i; }
+
 		new_point = snake.step(key);
 		snake.show(new_point);
 		if (snake.over)
@@ -66,8 +69,11 @@ int main()
 			cout << char(7);
 			break;
 		}
-		++i;
+		flag_key = false;
 	}
+
+	flag_end = true;
+	key_in.join();
 	
 	bufferConsole.X = 0;	bufferConsole.Y = 0;
 	SetConsoleCursorPosition(hWnd, bufferConsole);
