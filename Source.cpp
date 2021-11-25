@@ -69,13 +69,28 @@ int main()
 		++i;
 	}
 	
+	bufferConsole.X = 0;	bufferConsole.Y = 0;
+	SetConsoleCursorPosition(hWnd, bufferConsole);
+	for (int i = 0; i < HEIGHT; i++)	// Clear of field on console
+	{
+		for (int j = 0; j < WIDTH; j++)
+		{
+			if (i == 0 || i == HEIGHT - 1)
+				Sleep(1);
+			cout << ' ';
+		}
+		cout << endl;
+	}
+
 	for (int i = 0; i < HEIGHT; i++)
 	{
 		delete screen[i];
 	}
 	delete[] screen;
 
-	getchar();
+	bufferConsole.X = 0;	bufferConsole.Y = 0;
+	SetConsoleCursorPosition(hWnd, bufferConsole);
+	cout << "\x1b[91mGame over!\x1b[0m" << endl << "Scrore: \x1b[92m" << snake.get_score() << "\x1b[0m" << endl;
 
 	return 0;
 }

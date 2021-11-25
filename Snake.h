@@ -99,6 +99,7 @@ public:
 		else if (int(key) == 100) { ++res.x; }
 		else if (int(key) == 115) { ++res.y; }
 		else if (int(key) == 97) { --res.x; }
+		else if (int(key) == 10) { over = true; }
 
 		if (res.x < 1 || res.x >= width || res.y < 1 || res.y >= height || screen[res.y][res.x] == '*')
 		{
@@ -155,7 +156,12 @@ public:
 			screen[fruit.y][fruit.x] = '#';
 			bufferConsole.X = fruit.x;	bufferConsole.Y = fruit.y;
 			SetConsoleCursorPosition(hWnd, bufferConsole);
-			cout << "\x1b[93m" << '#' << "\x1b[0m";
+			cout << "\x1b[96m" << '#' << "\x1b[0m";
+
+			// Обновим счет
+			bufferConsole.X = width / 2 - 1;	bufferConsole.Y = 0;
+			SetConsoleCursorPosition(hWnd, bufferConsole);
+			cout << "\x1b[92m" << " " << points.size() << " " << "\x1b[0m";
 		}
 		
 		return;
@@ -163,8 +169,8 @@ public:
 
 	void create_fruit()
 	{
-		fruit.y = 1 + rand() % height;
-		fruit.x = 1 + rand() % width;
+		fruit.y = 1 + (rand() % (height - 1));
+		fruit.x = 1 + (rand() % (width - 1));
 
 		int count = 0;
 		while (screen[fruit.y][fruit.x] =='*')
@@ -192,6 +198,11 @@ public:
 		is_fruit = true;
 
 		return;
+	}
+
+	int get_score()
+	{
+		return points.size();
 	}
 
 	bool is_fruit;
