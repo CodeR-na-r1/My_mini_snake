@@ -99,6 +99,12 @@ public:
 
 	void show(Point new_coord_head)
 	{
+		// Снимаем окрас 'старой' головы
+		bufferConsole.X = points.front().x;	bufferConsole.Y = points.front().y;
+		SetConsoleCursorPosition(hWnd, bufferConsole);
+		cout << '*';
+
+		// Добавляем новую голову
 		this->points.push_front(new_coord_head);
 		bufferConsole.X = points.front().x;	bufferConsole.Y = points.front().y;
 		SetConsoleCursorPosition(hWnd, bufferConsole);
@@ -106,6 +112,7 @@ public:
 		if ((rand() % 3) & 1) { cout << "\x1b[93m"; } else { cout << "\x1b[91m"; }
 		cout << '*' << "\x1b[0m";
 
+		// Удаляем хвост
 		bufferConsole.X = points.back().x;	bufferConsole.Y = points.back().y;
 		SetConsoleCursorPosition(hWnd, bufferConsole);
 		this->screen[points.back().y][points.back().x] = ' ';
