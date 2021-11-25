@@ -21,6 +21,11 @@ struct Point
 		this->x = _point.x;
 		this->y = _point.y;
 	}
+
+	bool operator==(const Point& other) const
+	{
+		return this->x == other.x && this->y == other.y;
+	}
 };
 
 class Snake
@@ -38,6 +43,8 @@ public:
 		this->height = _height;
 		this->bufferConsole = _bufferConsole;
 		this->hWnd = _hWnd;
+		this->is_fruit = false;
+		this->over = false;
 	}
 
 	~Snake()
@@ -112,21 +119,74 @@ public:
 		if ((rand() % 3) & 1) { cout << "\x1b[93m"; } else { cout << "\x1b[91m"; }
 		cout << '*' << "\x1b[0m";
 
-		// Удаляем хвост
-		bufferConsole.X = points.back().x;	bufferConsole.Y = points.back().y;
-		SetConsoleCursorPosition(hWnd, bufferConsole);
-		this->screen[points.back().y][points.back().x] = ' ';
-		cout << ' ';
-		this->points.pop_back();
+		if (fruit == new_coord_head || !is_fruit)
+			this->is_fruit = false;
+
+		if (this->is_fruit)
+		{
+			// Удаляем хвост
+			bufferConsole.X = points.back().x;	bufferConsole.Y = points.back().y;
+			SetConsoleCursorPosition(hWnd, bufferConsole);
+			this->screen[points.back().y][points.back().x] = ' ';
+			cout << ' ';
+			this->points.pop_back();
+		}
+		else	// Если фрукт сьели, то хвост не трогаем и генерируем новый фрукт
+		{
+			this->create_fruit();
+			if (over) { return; }
+			screen[fruit.y][fruit.x] = '#';
+			bufferConsole.X = fruit.x;	bufferConsole.Y = fruit.y;
+			SetConsoleCursorPosition(hWnd, bufferConsole);
+			cout << "\x1b[93m" << '#' << "\x1b[0m";
+		}
+		
 		return;
 	}
 
+	void create_fruit()
+	{
+		fruit.y = 1 + rand() % height;
+		fruit.x = 1 + rand() % width;
+
+		int count = 0;
+		while (screen[fruit.y][fruit.x] =='*')
+		{
+			++fruit.x;
+
+			if (fruit.x >= width)
+			{
+				fruit.x = 0;
+				++fruit.y;
+			}
+
+			if (fruit.y >= height)
+				fruit.y = 0;
+
+			if (count < width * height)
+				++count;
+			else
+			{
+				over = true;
+				break;
+			}
+		}
+
+		is_fruit = true;
+
+		return;
+	}
+
+	bool is_fruit;
+
 private:
 	list<Point> points;
+	Point fruit;
 	char** screen;
 	unsigned width;
 	unsigned height;
 	int trand;
+	bool over;
 	COORD bufferConsole;
 	HANDLE hWnd;
 
