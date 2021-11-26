@@ -101,7 +101,7 @@ public:
 		else if (int(key) == 97) { --res.x; }
 		else if (int(key) == 10) { over = true; }
 
-		if (res.x < 1 || res.x >= width || res.y < 1 || res.y >= height || screen[res.y][res.x] == '*')
+		if (res.x < 1 || res.x >= (width-2) || res.y < 1 || res.y >= (height-1) || screen[res.y][res.x] == '*')
 		{
 			over = true;
 		}
@@ -170,20 +170,20 @@ public:
 	void create_fruit()
 	{
 		fruit.y = 1 + (rand() % (height - 1));
-		fruit.x = 1 + (rand() % (width - 1));
+		fruit.x = 1 + (rand() % (width - 2));
 
 		int count = 0;
 		while (screen[fruit.y][fruit.x] =='*')
 		{
 			++fruit.x;
 
-			if (fruit.x >= width)
+			if (fruit.x >= width-2)
 			{
 				fruit.x = 0;
 				++fruit.y;
 			}
 
-			if (fruit.y >= height)
+			if (fruit.y >= height-1)
 				fruit.y = 0;
 
 			if (count < width * height)
