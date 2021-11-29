@@ -2,6 +2,7 @@
 #include <conio.h>
 #include <windows.h>
 #include <thread>
+#include <clocale>
 #include "Snake.h"
 
 #define WIDTH 120
@@ -9,26 +10,27 @@
 
 int main()
 {
+	setlocale(LC_ALL, "ru");
 	srand(time(0));
-	
+
 	// setupConsole
 	HANDLE hWnd = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD bufferConsole = { WIDTH, HEIGHT };	// Фиксированное окно консоли
 	SetConsoleScreenBufferSize(hWnd, bufferConsole);	// Применяем
-	
+
 	CONSOLE_CURSOR_INFO curs = { 0 };
 	curs.dwSize = sizeof(curs);
 	curs.bVisible = FALSE;	// Скрыть курсор консоли
 	SetConsoleCursorInfo(hWnd, &curs);	// Применяем
-	
+
 	DWORD dwMode = 0;
 	GetConsoleMode(hWnd, &dwMode);
 	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;	// Для корректного отборжаниея виртуальных ‎‎последовательностей консоли
 	dwMode |= DISABLE_NEWLINE_AUTO_RETURN;	// Для корректной смены позиционирования каретки консоли
 	SetConsoleMode(hWnd, dwMode);	// Применяем
-	
+
 	// create array for game field
-	char** screen = new char*[HEIGHT];
+	char** screen = new char* [HEIGHT];
 	for (int i = 0; i < HEIGHT; i++)
 	{
 		screen[i] = new char[WIDTH];
@@ -38,9 +40,9 @@ int main()
 	// [][WIDTH - 1] = '\n'
 	// [][WIDTH - 2] = '#'
 	// [][0] = '#'
-	for (int i = 0; i < WIDTH -1; i++) { screen[0][i] = '#'; }	// begin of field
+	for (int i = 0; i < WIDTH - 1; i++) { screen[0][i] = '#'; }	// begin of field
 	screen[0][WIDTH - 1] = '\n';
-	for (int i = 0; i < WIDTH -1; i++) { screen[HEIGHT - 1][i] = '#'; }	// end of field
+	for (int i = 0; i < WIDTH - 1; i++) { screen[HEIGHT - 1][i] = '#'; }	// end of field
 	screen[HEIGHT - 1][WIDTH - 1] = '\0';
 
 	for (int i = 1; i < HEIGHT - 1; i++)	// middle of field
@@ -85,15 +87,15 @@ int main()
 		}
 		flag_key = false;	//	Сброс флага (отвечающего за наличие ввода клавиши пользователем)
 	}
-	
+
 	/* Стираем поле: верхняя и нижняя границы поля */
 	for (int i = 0; i < WIDTH; i++)
 	{
 		bufferConsole.X = i;	bufferConsole.Y = 0;
 		SetConsoleCursorPosition(hWnd, bufferConsole);
-		cout << ' '; 
+		cout << ' ';
 		Sleep(1);
-		bufferConsole.X = WIDTH-1-i;	bufferConsole.Y = HEIGHT-1;
+		bufferConsole.X = WIDTH - 1 - i;	bufferConsole.Y = HEIGHT - 1;
 		SetConsoleCursorPosition(hWnd, bufferConsole);
 		cout << ' ';
 	}
